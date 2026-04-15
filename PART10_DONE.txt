@@ -1,0 +1,30 @@
+Part 10 complete
+
+Tests and documentation written for the LaunchCtrl monorepo.
+
+── TESTS (tests/) ──────────────────────────────────────────────────────────
+
+tests/vitest.config.ts                   — Vitest config with monorepo path aliases
+tests/setup.ts                           — Global test setup (env vars, pino mock, logger mock)
+tests/package.json                       — Test workspace package with vitest dependencies
+
+tests/unit/planner.test.ts               — 686 lines, 60+ tests for all 5 planner pipeline stages
+tests/unit/skills.test.ts                — 351 lines, covers SkillRegistry + all 9 pack SKILL.md files
+tests/unit/templates.test.ts             — 360 lines, template renderer + all 5 tone profiles
+tests/unit/auth.test.ts                  — 443 lines, Telegram initData HMAC validation + timing-safe comparison
+
+tests/integration/api.test.ts            — 487 lines, Fastify inject tests: /health, /auth/telegram, /users/me, /skills
+tests/integration/workspaces.test.ts     — 541 lines, workspace CRUD, entity management, auth enforcement
+
+tests/smoke/core-flow.test.ts            — 716 lines, full 8-step E2E journey + isolation + error states
+                                           (TODO comment for future Playwright Mini App expansion)
+
+── DOCS (docs/) ────────────────────────────────────────────────────────────
+
+docs/README.md                           — Full project README: features, stack, getting started, env vars, scripts
+docs/ARCHITECTURE.md                     — ASCII diagrams, package graph, request lifecycle, DB schema, Redis, ports
+docs/SHARP.md                            — SHARP philosophy, all 4 execution modes, Rose/Combot honesty, DRY_RUN, audit
+docs/planner-internals.md                — Deep dive: all 5 pipeline stages, step schema, mode assignment rules
+docs/skills-guide.md                     — SKILL.md schema, SkillRegistry API, all 9 packs, security/automation profiles
+docs/integrations-guide.md               — IAdapter interface, Rose/Combot adapters, all 6 stubs, how to add new adapter
+docs/api-reference.md                    — Complete REST API reference: all endpoints, request/response schemas, error codes
