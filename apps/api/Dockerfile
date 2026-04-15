@@ -21,7 +21,7 @@ CMD ["pnpm", "--filter", "@launchctrl/api", "dev"]
 
 FROM deps AS build
 COPY . .
-RUN pnpm --filter @launchctrl/api... build
+RUN turbo build --filter @launchctrl/api
 
 FROM base AS production
 COPY --from=build /app/apps/api/dist ./dist

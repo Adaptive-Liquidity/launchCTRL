@@ -16,7 +16,7 @@ CMD ["pnpm", "--filter", "@launchctrl/miniapp", "dev"]
 FROM deps AS build
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter @launchctrl/miniapp build
+RUN turbo build --filter @launchctrl/miniapp
 
 FROM base AS production
 COPY --from=build /app/apps/miniapp/.next/standalone ./
