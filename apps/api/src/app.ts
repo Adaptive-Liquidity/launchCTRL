@@ -114,6 +114,7 @@ export async function buildApp() {
   const { assetsRoutes } = await import('./modules/assets/assets.routes.js');
   const { auditRoutes } = await import('./modules/audit/audit.routes.js');
   const { skillsRoutes } = await import('./modules/skills/skills.routes.js');
+  const { userbotRoutes } = await import('./modules/userbot/userbot.routes.js');
 
   await app.register(usersRoutes, { prefix: '/api/users' });
   await app.register(workspacesRoutes, { prefix: '/api/workspaces' });
@@ -122,6 +123,7 @@ export async function buildApp() {
   await app.register(assetsRoutes, { prefix: '/api' });
   await app.register(auditRoutes, { prefix: '/api' });
   await app.register(skillsRoutes, { prefix: '/api' });
+  await app.register(userbotRoutes);
 
   // Health check
   app.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }));

@@ -66,13 +66,11 @@ Rose Bot is one of the most capable Telegram group management bots available. Th
 - Generates clean service commands
 - Creates a copy-paste setup bundle
 
-## Important: Execution Reality
+## Execution Modes
 
-**LaunchCtrl cannot directly control Rose Bot on your behalf.**
+**With Userbot Agent (AUTO):** When you connect a Telegram account during workspace setup, LaunchCtrl sends all Rose commands automatically. Your account must be a group admin.
 
-Rose Bot does not expose a public API that allows external services to configure it programmatically. All Rose configuration must be done by a group administrator sending commands in the group chat.
-
-LaunchCtrl generates the exact commands you need and presents them in order with one-click copy buttons.
+**Without Userbot Agent (COPY_PASTE):** LaunchCtrl generates the exact commands for you to paste.
 
 ## Generated Commands
 

@@ -16,6 +16,7 @@ export interface AdapterActionInput {
   workspaceId: string;
   dryRun: boolean;
   idempotencyKey: string;
+  context?: Record<string, unknown>;
 }
 
 export interface IntegrationAdapter {
@@ -27,7 +28,7 @@ export interface IntegrationAdapter {
    * Returns the effective execution mode for a given action.
    * This is honest about what can actually be automated.
    */
-  getExecutionMode(action: string): ExecutionMode;
+  getExecutionMode(action: string, context?: { hasUserbotSession?: boolean }): ExecutionMode;
 
   /**
    * Executes or simulates an action.

@@ -6,6 +6,11 @@ interface RequestOptions {
   token?: string;
 }
 
+// Generic apiRequest export for use in hooks and mutations
+export async function apiRequest<T = unknown>(path: string, options: RequestOptions = {}): Promise<T> {
+  return request<T>(path, options);
+}
+
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', body, token } = options;
 
@@ -96,3 +101,34 @@ export const api = {
       request<{ success: true; data: unknown[] }>('/api/skills', { token }),
   },
 };
+
+// ---------------------------------------------------------------------------
+// Userbot typed API functions
+// ---------------------------------------------------------------------------
+
+export async function initUserbotAuth(data: { phoneNumber: string; workspaceId: string }) {
+  return apiRequest<{ phoneCodeHash: string }>('/api/v1/userbot/auth/init', { method: 'POST', body: data });
+}
+
+export async function completeUserbotAuth(data: {
+  phoneNumber: string;
+  phoneCode: string;
+  phoneCodeHash: string;
+  workspaceId: string;
+}) {
+  return apiRequest<{ success: boolean; username?: string; requiresTwoFactor?: boolean }>(
+    '/api/v1/userbot/auth/complete',
+    { method: 'POST', body: data },
+  );
+}
+
+export async function completeUserbot2FA(data: { phoneNumber: string; password: string; workspaceId: string }) {
+  return apiRequest<{ success: boolean; username?: string }>('/api/v1/userbot/auth/2fa', {
+    method: 'POST',
+    body: data,
+  });
+}
+
+export async function revokeUserbotSession(workspaceId: string) {
+  return apiRequest<{ success: boolean }>(`/api/v1/workspaces/${workspaceId}/userbot`, { method: 'DELETE' });
+}

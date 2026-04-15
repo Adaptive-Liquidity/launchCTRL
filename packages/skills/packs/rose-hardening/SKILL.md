@@ -65,7 +65,9 @@ This pack applies aggressive security hardening using Rose Bot commands. It shou
 
 ## Execution Mode
 
-All steps are COPY_PASTE — you send the commands in your group.
+**With Userbot Agent (AUTO):** When you connect a Telegram account during workspace setup, LaunchCtrl sends all Rose commands automatically. Your account must be a group admin.
+
+**Without Userbot Agent (COPY_PASTE):** LaunchCtrl generates the exact commands for you to paste.
 
 ## Warning
 

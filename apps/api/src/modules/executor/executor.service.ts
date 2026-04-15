@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { getDb, schema } from '../../db/index.js';
-import { eq, desc } from 'drizzle-orm';
+import { eq, and, desc } from 'drizzle-orm';
 import { getAdapter } from '@launchctrl/integrations';
 import { generateAsset } from '@launchctrl/templates';
 import type { PlanStep, StepResult } from '@launchctrl/types';
@@ -135,26 +135,63 @@ async function executeStep(step: PlanStep, isDryRun: boolean, workspaceId: strin
   const startedAt = new Date();
 
   try {
+    // Load userbot session if available for this workspace (Rose adapter)
+    let userbotContext: Record<string, unknown> = {};
+    if (step.integration === 'rose') {
+      const db = getDb();
+      const userbotSession = await db.select()
+        .from(schema.integrations)
+        .where(and(
+          eq(schema.integrations.workspaceId, workspaceId),
+          eq(schema.integrations.type, 'userbot'),
+          eq(schema.integrations.isActive, true),
+        ))
+        .limit(1)
+        .then(r => r[0] ?? null);
+
+      if (userbotSession) {
+        const config = userbotSession.config as { encryptedSession?: string };
+        if (config.encryptedSession) {
+          userbotContext = {
+            encryptedUserbotSession: config.encryptedSession,
+            groupId: step.payload?.['groupId'] ?? step.payload?.['chatId'],
+          };
+        }
+      }
+    }
+
+    // For non-AUTO steps: check whether a userbot session upgrades the mode
+    const hasUserbotSession = Object.keys(userbotContext).length > 0;
+    const adapter = getAdapter(step.integration);
+
     if (step.executionMode !== 'AUTO') {
-      // Non-AUTO steps are not executed — they produce manual instructions
-      return {
-        stepId: step.id,
-        status: 'awaiting_manual',
-        startedAt,
-        completedAt: new Date(),
-        output: {
-          mode: step.executionMode,
-          copyContent: step.copyContent,
-          manualInstructions: step.manualInstructions,
-        },
-        error: null,
-        retryCount: 0,
-        idempotencyKey: step.idempotencyKey,
-      };
+      // If this step was planned as COPY_PASTE and we now have a userbot session,
+      // re-evaluate the effective mode so it can run as AUTO
+      const effectiveMode = adapter
+        ? adapter.getExecutionMode(step.action, { hasUserbotSession })
+        : step.executionMode;
+
+      if (effectiveMode !== 'AUTO') {
+        // Non-AUTO steps are not executed — they produce manual instructions
+        return {
+          stepId: step.id,
+          status: 'awaiting_manual',
+          startedAt,
+          completedAt: new Date(),
+          output: {
+            mode: step.executionMode,
+            copyContent: step.copyContent,
+            manualInstructions: step.manualInstructions,
+          },
+          error: null,
+          retryCount: 0,
+          idempotencyKey: step.idempotencyKey,
+        };
+      }
+      // effectiveMode is AUTO (userbot session present) — fall through to execute
     }
 
     // AUTO steps — execute via adapter (or simulate in dry run)
-    const adapter = getAdapter(step.integration);
     if (!adapter) {
       return {
         stepId: step.id,
@@ -174,6 +211,7 @@ async function executeStep(step: PlanStep, isDryRun: boolean, workspaceId: strin
       workspaceId,
       dryRun: isDryRun,
       idempotencyKey: step.idempotencyKey,
+      context: userbotContext,
     });
 
     return {

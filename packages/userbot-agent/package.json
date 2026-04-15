@@ -1,0 +1,26 @@
+{
+  "name": "@launchctrl/userbot-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "telegram": "^2.25.15",
+    "big-integer": "^1.6.52",
+    "nanoid": "^5.0.7"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^22.0.0"
+  },
+  "peerDependencies": {
+    "@launchctrl/lib": "workspace:*",
+    "@launchctrl/types": "workspace:*"
+  }
+}
