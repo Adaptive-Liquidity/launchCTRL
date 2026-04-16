@@ -12,6 +12,7 @@ COPY packages/domain/package.json ./packages/domain/
 COPY packages/skills/package.json ./packages/skills/
 COPY packages/templates/package.json ./packages/templates/
 COPY packages/integrations/package.json ./packages/integrations/
+COPY packages/userbot-agent/package.json ./packages/userbot-agent/
 RUN pnpm install --frozen-lockfile
 
 FROM deps AS development

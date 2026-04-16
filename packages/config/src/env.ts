@@ -3,12 +3,15 @@ import { z } from 'zod';
 const EnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
+  // Railway injects PORT; services fall back to their own defaults
+  PORT: z.coerce.number().optional(),
+
   // API
-  API_PORT: z.coerce.number().default(3001),
+  API_PORT: z.coerce.number().optional(),
   API_HOST: z.string().default('0.0.0.0'),
 
   // Bot
-  BOT_PORT: z.coerce.number().default(3002),
+  BOT_PORT: z.coerce.number().optional(),
   TELEGRAM_BOT_TOKEN: z.string().min(1),
   TELEGRAM_BOT_WEBHOOK_SECRET: z.string().optional(),
   TELEGRAM_MINI_APP_URL: z.string().url().optional(),
@@ -61,7 +64,11 @@ export function loadEnv(): Env {
     throw new Error(`Invalid environment configuration:\n${issues}`);
   }
 
-  _env = result.data;
+  const data = result.data;
+  data.API_PORT = data.API_PORT ?? data.PORT ?? 3001;
+  data.BOT_PORT = data.BOT_PORT ?? data.PORT ?? 3002;
+
+  _env = data;
   return _env;
 }
 
