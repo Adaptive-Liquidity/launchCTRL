@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { getDb, schema } from '../../db/index.js';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 function slugify(name: string): string {
   return name

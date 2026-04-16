@@ -143,14 +143,14 @@ async function executeStep(step: PlanStep, isDryRun: boolean, workspaceId: strin
         .from(schema.integrations)
         .where(and(
           eq(schema.integrations.workspaceId, workspaceId),
-          eq(schema.integrations.type, 'userbot'),
-          eq(schema.integrations.isActive, true),
+          eq(schema.integrations.slug, 'userbot'),
+          eq(schema.integrations.status, 'connected'),
         ))
         .limit(1)
         .then(r => r[0] ?? null);
 
       if (userbotSession) {
-        const config = userbotSession.config as { encryptedSession?: string };
+        const config = userbotSession.configMetadata as { encryptedSession?: string };
         if (config.encryptedSession) {
           userbotContext = {
             encryptedUserbotSession: config.encryptedSession,

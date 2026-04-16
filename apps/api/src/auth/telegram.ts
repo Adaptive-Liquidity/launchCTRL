@@ -128,9 +128,9 @@ export function validateTelegramInitData(initData: string): TelegramInitDataPayl
 function timingSafeStringEqual(a: string, b: string): boolean {
   if (a.length !== b.length) {
     // Still do a dummy comparison to prevent length-based timing attacks
-    let diff = 0;
+    let _diff = 0;
     for (let i = 0; i < a.length; i++) {
-      diff |= (a.charCodeAt(i) ^ (b.charCodeAt(i % b.length) ?? 0));
+      _diff |= (a.charCodeAt(i) ^ (b.charCodeAt(i % b.length) ?? 0));
     }
     return false;
   }

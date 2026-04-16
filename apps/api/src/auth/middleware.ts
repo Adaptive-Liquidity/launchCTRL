@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import type { User } from '../db/schema.js';
 import { getLogger } from '@launchctrl/lib';
 
-const logger = getLogger();
+const _logger = getLogger();
 
 declare module 'fastify' {
   interface FastifyRequest {

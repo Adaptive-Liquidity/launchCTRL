@@ -2,8 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireAuth } from '../../auth/middleware.js';
 import { getDb, schema } from '../../db/index.js';
-import { eq, and } from 'drizzle-orm';
-import { nanoid } from 'nanoid';
+import { eq } from 'drizzle-orm';
 
 export async function assetsRoutes(app: FastifyInstance): Promise<void> {
   // GET /api/workspaces/:workspaceId/assets

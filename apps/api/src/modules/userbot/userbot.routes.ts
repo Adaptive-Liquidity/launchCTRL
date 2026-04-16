@@ -1,10 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { z } from 'zod';
 import { nanoid } from 'nanoid';
 import { requireAuth } from '../../auth/middleware.js';
 import { getDb, schema } from '../../db/index.js';
 import { eq, and } from 'drizzle-orm';
-import { encryptSession, decryptSession } from '@launchctrl/userbot-agent';
 import { writeAuditEvent } from '../audit/audit.service.js';
 import { getLogger } from '@launchctrl/lib';
 
@@ -83,24 +81,23 @@ export async function userbotRoutes(app: FastifyInstance) {
         .from(schema.integrations)
         .where(and(
           eq(schema.integrations.workspaceId, workspaceId),
-          eq(schema.integrations.type, 'userbot'),
+          eq(schema.integrations.slug, 'userbot'),
         ))
         .limit(1)
         .then(r => r[0] ?? null);
 
       if (existing) {
         await db.update(schema.integrations)
-          .set({ config: { encryptedSession: encrypted, telegramUserId: result.userId, username: result.username }, isActive: true, updatedAt: new Date() })
+          .set({ configMetadata: { encryptedSession: encrypted, telegramUserId: result.userId, username: result.username }, status: 'connected', updatedAt: new Date() })
           .where(eq(schema.integrations.id, existing.id));
       } else {
         await db.insert(schema.integrations).values({
           id: nanoid(),
           workspaceId,
-          type: 'userbot',
-          config: { encryptedSession: encrypted, telegramUserId: result.userId, username: result.username },
-          isActive: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          slug: 'userbot',
+          displayName: 'Userbot',
+          configMetadata: { encryptedSession: encrypted, telegramUserId: result.userId, username: result.username },
+          status: 'connected',
         });
       }
 
@@ -136,7 +133,7 @@ export async function userbotRoutes(app: FastifyInstance) {
   }, async (request, reply) => {
     const { phoneNumber, password, workspaceId } =
       request.body as { phoneNumber: string; password: string; workspaceId: string };
-    const userId = (request as any).userId as string;
+    const _userId = (request as any).userId as string;
 
     const { complete2FA, encryptSession } = await import('@launchctrl/userbot-agent');
 
@@ -148,11 +145,10 @@ export async function userbotRoutes(app: FastifyInstance) {
       await db.insert(schema.integrations).values({
         id: nanoid(),
         workspaceId,
-        type: 'userbot',
-        config: { encryptedSession: encrypted, telegramUserId: result.userId, username: result.username },
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        slug: 'userbot',
+        displayName: 'Userbot',
+        configMetadata: { encryptedSession: encrypted, telegramUserId: result.userId, username: result.username },
+        status: 'connected',
       });
 
       return reply.send({ success: true, telegramUserId: result.userId, username: result.username });
@@ -173,7 +169,7 @@ export async function userbotRoutes(app: FastifyInstance) {
       .from(schema.integrations)
       .where(and(
         eq(schema.integrations.workspaceId, workspaceId),
-        eq(schema.integrations.type, 'userbot'),
+        eq(schema.integrations.slug, 'userbot'),
       ))
       .limit(1)
       .then(r => r[0] ?? null);
@@ -182,14 +178,13 @@ export async function userbotRoutes(app: FastifyInstance) {
       return reply.send({ connected: false });
     }
 
-    const config = session.config as { telegramUserId?: string; username?: string };
+    const config = session.configMetadata as { telegramUserId?: string; username?: string };
 
     return reply.send({
       connected: true,
-      isActive: session.isActive,
+      isActive: session.status === 'connected',
       telegramUserId: config.telegramUserId,
       username: config.username,
-      // Never return the encrypted session string to the client
     });
   });
 
@@ -203,10 +198,10 @@ export async function userbotRoutes(app: FastifyInstance) {
     const db = getDb();
 
     await db.update(schema.integrations)
-      .set({ isActive: false, updatedAt: new Date() })
+      .set({ status: 'disconnected', updatedAt: new Date() })
       .where(and(
         eq(schema.integrations.workspaceId, workspaceId),
-        eq(schema.integrations.type, 'userbot'),
+        eq(schema.integrations.slug, 'userbot'),
       ));
 
     await writeAuditEvent({

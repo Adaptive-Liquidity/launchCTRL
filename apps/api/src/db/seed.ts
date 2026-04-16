@@ -1,4 +1,4 @@
-import { loadEnv, getEnv } from '@launchctrl/config';
+import { loadEnv } from '@launchctrl/config';
 import { getDb, schema } from './index.js';
 import { nanoid } from 'nanoid';
 

@@ -1,7 +1,6 @@
 import { normalizeIntake, selectStack, generatePlanSteps, validatePlanSteps, renderExecutionBundle } from '@launchctrl/domain';
 import { getDb, schema } from '../../db/index.js';
 import type { WizardAnswers } from '@launchctrl/types';
-import { nanoid } from 'nanoid';
 import { writeAuditEvent } from '../audit/audit.service.js';
 import { eq, desc } from 'drizzle-orm';
 
