@@ -1,17 +1,21 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   transpilePackages: ['@launchctrl/types'],
   images: {
-    domains: ['t.me', 'telegram.org'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 't.me' },
+      { protocol: 'https', hostname: 'telegram.org' },
+    ],
   },
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
-          { key: 'X-Frame-Options', value: 'ALLOWALL' }, // Must allow Telegram to iframe
+          { key: 'X-Frame-Options', value: 'ALLOWALL' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
         ],
       },

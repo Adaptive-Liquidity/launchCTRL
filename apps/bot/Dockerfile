@@ -3,7 +3,7 @@ RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
 WORKDIR /app
 
 FROM base AS deps
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/bot/package.json ./apps/bot/
 COPY packages/types/package.json ./packages/types/
 COPY packages/config/package.json ./packages/config/

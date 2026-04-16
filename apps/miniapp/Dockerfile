@@ -3,7 +3,7 @@ RUN corepack enable && corepack prepare pnpm@9.1.0 --activate
 WORKDIR /app
 
 FROM base AS deps
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/miniapp/package.json ./apps/miniapp/
 COPY packages/types/package.json ./packages/types/
 RUN pnpm install --frozen-lockfile
@@ -16,7 +16,7 @@ CMD ["pnpm", "--filter", "@launchctrl/miniapp", "dev"]
 FROM deps AS build
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter @launchctrl/miniapp build
+RUN pnpm --filter @launchctrl/miniapp... build
 
 FROM base AS production
 COPY --from=build /app/apps/miniapp/.next/standalone ./
