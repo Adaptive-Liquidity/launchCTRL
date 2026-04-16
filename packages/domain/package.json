@@ -16,8 +16,9 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@launchctrl/types": "workspace:*",
     "@launchctrl/config": "workspace:*",
+    "@launchctrl/lib": "workspace:^",
+    "@launchctrl/types": "workspace:*",
     "nanoid": "^5.0.0"
   },
   "devDependencies": {

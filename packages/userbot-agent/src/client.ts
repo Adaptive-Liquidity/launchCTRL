@@ -68,7 +68,7 @@ export class UserbotClient {
       const result = await this.sendCommand({
         groupId: opts.groupId,
         command,
-        dryRun: opts.dryRun,
+        ...(opts.dryRun !== undefined && { dryRun: opts.dryRun }),
         delayMs,
       });
       results.push(result);

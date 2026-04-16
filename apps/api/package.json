@@ -28,6 +28,7 @@
     "@launchctrl/skills": "workspace:*",
     "@launchctrl/templates": "workspace:*",
     "@launchctrl/types": "workspace:*",
+    "@launchctrl/userbot-agent": "workspace:^",
     "bullmq": "^5.4.0",
     "drizzle-orm": "^0.30.0",
     "fastify": "^4.26.0",

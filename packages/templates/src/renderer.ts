@@ -62,7 +62,7 @@ export function renderTemplate(
  * Renders a template for preview with placeholder highlights
  */
 export function renderPreview(template: string, variables: Record<string, string>): string {
-  const result = renderTemplate(template, variables, { fallback: undefined });
+  const result = renderTemplate(template, variables, {});
 
   // For preview, wrap remaining placeholders in markers for UI highlighting
   return result.content.replace(/\{([A-Z_]+)\}/g, '[[[$1]]]');

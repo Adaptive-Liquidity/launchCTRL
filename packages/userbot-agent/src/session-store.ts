@@ -3,19 +3,25 @@ import { getLogger } from '@launchctrl/lib';
 
 const logger = getLogger();
 
+const getEncryptionKey = () => {
+  const key = process.env['ENCRYPTION_KEY'];
+  if (!key) throw new Error('ENCRYPTION_KEY env var is required');
+  return key;
+};
+
 /**
  * Encrypts a raw GramJS session string for storage in the database.
  * Uses AES-256-GCM from @launchctrl/lib.
  */
 export function encryptSession(rawSessionString: string): string {
-  return encrypt(rawSessionString);
+  return encrypt(rawSessionString, getEncryptionKey());
 }
 
 /**
  * Decrypts a stored session string for use with GramJS.
  */
 export function decryptSession(encryptedSessionString: string): string {
-  return decrypt(encryptedSessionString);
+  return decrypt(encryptedSessionString, getEncryptionKey());
 }
 
 /**

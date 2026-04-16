@@ -40,7 +40,7 @@ async function main() {
   const webhookUrl = process.env['WEBHOOK_URL'];
   if (webhookUrl) {
     await bot.api.setWebhook(webhookUrl, {
-      secret_token: env.TELEGRAM_BOT_WEBHOOK_SECRET,
+      ...(env.TELEGRAM_BOT_WEBHOOK_SECRET && { secret_token: env.TELEGRAM_BOT_WEBHOOK_SECRET }),
       allowed_updates: ['message', 'callback_query', 'inline_query'],
     });
     logger.info({ url: webhookUrl }, 'Webhook registered with Telegram');

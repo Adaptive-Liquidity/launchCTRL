@@ -311,7 +311,7 @@ function OtpStep({
     if (isFull && !mutation.isPending) {
       mutation.mutate();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [isFull, code]);
 
   const handleDigitChange = (index: number, value: string) => {
@@ -619,8 +619,6 @@ export function UserbotSetup({ workspaceId, onComplete, onSkip }: UserbotSetupPr
 
   const StepIcon = stepIcons[step];
 
-  const stepOrder: Step[] = ['intro', 'phone', 'otp', '2fa', 'success'];
-  const stepIndex = stepOrder.indexOf(step);
   // 2FA is conditional so don't count it in normal progress
   const progressSteps = ['intro', 'phone', 'otp', 'success'];
   const progressIndex = progressSteps.indexOf(step === '2fa' ? 'otp' : step);

@@ -17,7 +17,7 @@ interface SetupWizardProps {
 
 const TOTAL_STEPS = WIZARD_STEPS.filter(s => s.type !== 'review').length;
 
-export function SetupWizard({ workspaceId, onComplete, onCancel }: SetupWizardProps) {
+export function SetupWizard({ workspaceId: _workspaceId, onComplete, onCancel: _onCancel }: SetupWizardProps) {
   const { currentStep, answers, nextStep, prevStep, setAnswer, reset } = useWizardStore();
   const [direction, setDirection] = useState<1 | -1>(1);
 

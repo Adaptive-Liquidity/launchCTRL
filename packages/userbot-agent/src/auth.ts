@@ -22,12 +22,17 @@ export async function initAuth(opts: {
 
   await client.connect();
 
+  // @ts-expect-error — telegram deep imports lack type declarations
+  const { SendCode } = await import('telegram/tl/functions/auth/index.js');
+  // @ts-expect-error — telegram deep imports lack type declarations
+  const { CodeSettings } = await import('telegram/tl/types/index.js');
+
   const result = await client.invoke(
-    new (await import('telegram/tl/functions/auth/index.js')).SendCode({
+    new SendCode({
       phoneNumber: opts.phoneNumber,
       apiId: opts.apiId,
       apiHash: opts.apiHash,
-      settings: new (await import('telegram/tl/types/index.js')).CodeSettings({}),
+      settings: new CodeSettings({}),
     })
   );
 
@@ -53,8 +58,10 @@ export async function completeAuth(opts: {
   const { client } = pending;
 
   try {
+    // @ts-expect-error — telegram deep imports lack type declarations
+    const { SignIn } = await import('telegram/tl/functions/auth/index.js');
     await client.invoke(
-      new (await import('telegram/tl/functions/auth/index.js')).SignIn({
+      new SignIn({
         phoneNumber: opts.phoneNumber,
         phoneCodeHash: opts.phoneCodeHash,
         phoneCode: opts.phoneCode,

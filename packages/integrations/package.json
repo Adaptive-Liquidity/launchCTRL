@@ -16,8 +16,9 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@launchctrl/types": "workspace:*",
     "@launchctrl/lib": "workspace:*",
+    "@launchctrl/types": "workspace:*",
+    "@launchctrl/userbot-agent": "workspace:^",
     "zod": "^3.23.0"
   },
   "devDependencies": {

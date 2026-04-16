@@ -47,7 +47,7 @@ interface ExecutionModeTagProps {
   showDescription?: boolean;
 }
 
-export function ExecutionModeTag({ mode, className, showDescription }: ExecutionModeTagProps) {
+export function ExecutionModeTag({ mode, className, showDescription: _showDescription }: ExecutionModeTagProps) {
   const config = MODE_CONFIG[mode];
   const Icon = config.icon;
 

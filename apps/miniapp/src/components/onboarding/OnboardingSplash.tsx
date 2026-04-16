@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Zap, Shield, Sparkles, ArrowRight } from 'lucide-react';
 import { haptic } from '@/lib/telegram';
 

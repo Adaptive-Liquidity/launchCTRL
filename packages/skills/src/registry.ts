@@ -57,7 +57,7 @@ class SkillRegistry {
   getCompatiblePacks(category: string, securityProfile: string, automationProfile: string): LoadedSkillPack[] {
     return Array.from(this.packs.values()).filter((p) => {
       const catOk =
-        p.meta.compatibleCategories === 'all' || p.meta.compatibleCategories.includes(category);
+        p.meta.compatibleCategories === 'all' || p.meta.compatibleCategories.includes(category as never);
 
       const securityOrder = ['low', 'balanced', 'hard', 'extreme'];
       const minSecIdx = securityOrder.indexOf(p.meta.minSecurityProfile);
